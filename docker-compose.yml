@@ -1,6 +1,7 @@
 services:
   web:
     build: .
+    command: gunicorn --bind 0.0.0.0:5000 --workers 2 --reload backend.app:app
     ports:
       - "5000:5000"
     env_file:
@@ -21,4 +22,3 @@ services:
 
 volumes:
   postgres_data:
-

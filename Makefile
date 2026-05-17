@@ -1,5 +1,6 @@
-run:
-	flask --app backend.app run --debug
+# -- Backend -------------------------------------------------
+run-api:
+	flask --app backend.app run --debug --port 5000
 
 test:
 	pytest backend/tests/ -v
@@ -15,12 +16,23 @@ init-db:
 	flask --app backend.app db migrate -m "initial"
 	flask --app backend.app db upgrade
 
-docker:
-	docker-compose up --build
+# -- Frontend ------------------------------------------------
+install-frontend:
+	cd frontend && npm install
+
+run-frontend:
+	cd frontend && npm run dev
+
+build-frontend:
+	cd frontend && npm run build
+
+# -- Combined ------------------------------------------------
+dev:
+	make run-api & make run-frontend
 
 install:
-	pip install -r requirements.txt
+	pip install -r requirements.txt && cd frontend && npm install
 
-install-dev:
-	pip install -r requirements-dev.txt
-
+# -- Docker --------------------------------------------------
+docker:
+	docker-compose up --build

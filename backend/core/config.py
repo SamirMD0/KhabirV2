@@ -22,6 +22,7 @@ class BaseConfig:
     UPLOAD_FOLDER = os.getenv("UPLOAD_FOLDER", "backend/static/uploads")
     MAX_CONTENT_LENGTH = int(os.getenv("MAX_CONTENT_LENGTH", "16777216"))
     RATELIMIT_DEFAULT = os.getenv("RATELIMIT_DEFAULT", "200/day;50/hour")
+    CORS_ORIGINS = os.getenv("CORS_ORIGINS", "http://localhost:5173").split(",")
     REFRESH_COOKIE_NAME = "refresh_token"
     REFRESH_COOKIE_MAX_AGE = JWT_REFRESH_TOKEN_EXPIRES
     PERMANENT_SESSION_LIFETIME = timedelta(seconds=JWT_REFRESH_TOKEN_EXPIRES)
@@ -57,4 +58,3 @@ config_by_name = {
 def get_config(config_name: str | None = None) -> type[BaseConfig]:
     env_name = config_name or os.getenv("FLASK_ENV", "development")
     return config_by_name.get(env_name, DevelopmentConfig)
-

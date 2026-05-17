@@ -1,74 +1,78 @@
 # Khabir V2
 
-AI-powered accident analysis web app scaffold built with Flask, SQLAlchemy, JWT auth, Marshmallow, and Gemini.
+AI-powered accident analysis platform.
+Flask API (Python) + React frontend (Vite + Tailwind).
 
-## First Run
+## Project Structure
 
-1. Create virtual environment
+| Folder | What it is |
+|--------|-----------|
+| `backend/` | Flask REST API - auth, cases, analysis, admin |
+| `frontend/` | React + Vite SPA |
+| `claude/` | Architecture plan and prompt history |
 
-   ```bash
-   python -m venv venv
-   ```
+## Quick Start
 
-   Windows:
+### 1. Clone and set up environment
 
-   ```bat
-   venv\Scripts\activate
-   ```
+    git clone <repo>
+    cd khabir-v2
 
-   Mac/Linux:
+    # Backend
+    python -m venv venv
+    source venv/bin/activate        # Windows: venv\Scripts\activate
+    pip install -r requirements-dev.txt
+    cp .env.example .env            # fill in SECRET_KEY, JWT_SECRET_KEY, GEMINI_API_KEY
 
-   ```bash
-   source venv/bin/activate
-   ```
+    # Frontend
+    cd frontend && npm install && cd ..
 
-2. Install dependencies
+### 2. Generate secret keys
 
-   ```bash
-   pip install -r requirements-dev.txt
-   ```
+    python -c "import secrets; print(secrets.token_hex(32))"
+    # Run twice - once for SECRET_KEY, once for JWT_SECRET_KEY
 
-3. Copy `.env.example` to `.env` and fill in secrets
+### 3. Get a free Gemini API key
 
-   Windows:
+    https://aistudio.google.com/app/apikey
+    # Add to .env as GEMINI_API_KEY=...
 
-   ```bat
-   copy .env.example .env
-   set FLASK_APP=backend.app
-   ```
+### 4. Initialize the database
 
-   Mac/Linux:
+    flask --app backend.app db init
+    flask --app backend.app db migrate -m "initial"
+    flask --app backend.app db upgrade
 
-   ```bash
-   cp .env.example .env
-   export FLASK_APP=backend.app
-   ```
+### 5. Run both servers
 
-   Fill in `SECRET_KEY`, `JWT_SECRET_KEY`, and `GEMINI_API_KEY`.
+    # Terminal 1 - Flask API on port 5000
+    flask --app backend.app run --debug
 
-4. Initialize the database
+    # Terminal 2 - React dev server on port 5173
+    cd frontend && npm run dev
 
-   ```bash
-   flask --app backend.app db init
-   flask --app backend.app db migrate -m "initial"
-   flask --app backend.app db upgrade
-   ```
+    # Or both at once:
+    make dev
 
-5. Run the development server
+Visit: http://localhost:5173
 
-   ```bash
-   flask --app backend.app run --debug
-   ```
+## Deployment
 
-6. Run tests
+| Service | What it hosts |
+|---------|---------------|
+| Railway | Flask API + PostgreSQL (free tier) |
+| Vercel | React frontend (free tier) |
 
-   ```bash
-   pytest backend/tests/ -v
-   ```
+Set `VITE_API_URL=https://your-railway-app.up.railway.app` in Vercel env vars.
+Set `CORS_ORIGINS=https://your-vercel-app.vercel.app` in Railway env vars.
 
-7. Run with Docker (optional)
+## Run Tests
 
-   ```bash
-   docker-compose up --build
-   ```
+    pytest backend/tests/ -v
 
+## Stack
+
+Backend: Flask 3, SQLAlchemy 2, Flask-Migrate, PyJWT, Marshmallow, Flask-Limiter
+Frontend: React 18, Vite 5, Tailwind CSS 3, React Router 6, Axios
+AI: Google Gemini 1.5 Flash (free tier)
+DB: SQLite (dev) / PostgreSQL (prod)

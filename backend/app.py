@@ -1,6 +1,6 @@
 from __future__ import annotations
 
-from flask import Flask, jsonify, render_template
+from flask import Flask, jsonify
 
 from .api.admin import bp as admin_bp
 from .api.auth import bp as auth_bp
@@ -16,8 +16,11 @@ def create_app(config_name: str | None = None) -> Flask:
     app.config.from_object(get_config(config_name))
 
     db.init_app(app)
+    with app.app_context():
+        from .models import AccidentCase, User  # noqa: F401
+
     migrate.init_app(app, db)
-    cors.init_app(app, supports_credentials=True)
+    cors.init_app(app, origins=app.config["CORS_ORIGINS"], supports_credentials=True)
     limiter.init_app(app)
 
     register_error_handlers(app)
@@ -29,7 +32,7 @@ def create_app(config_name: str | None = None) -> Flask:
 
     @app.get("/")
     def index():
-        return render_template("index.html")
+        return jsonify({"name": "Khabir V2 API", "version": "2.0.0", "docs": "/api/health"})
 
     @app.get("/api")
     def api_root():
@@ -39,4 +42,3 @@ def create_app(config_name: str | None = None) -> Flask:
 
 
 app = create_app()
-

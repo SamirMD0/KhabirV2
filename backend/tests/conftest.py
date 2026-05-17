@@ -39,13 +39,13 @@ def test_user(app):
         user.set_password("password123")
         db.session.add(user)
         db.session.commit()
-        db.session.refresh(user)
-        return user
+        user_id = user.id
+        username = user.username
+    return {"id": user_id, "username": username}
 
 
 @pytest.fixture()
 def auth_headers(app, test_user):
     with app.app_context():
-        token = create_access_token(test_user.id)
+        token = create_access_token(test_user["id"])
     return {"Authorization": f"Bearer {token}"}
-
