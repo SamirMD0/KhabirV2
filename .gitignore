@@ -1,0 +1,52 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*.pyc
+*$py.class
+
+# Virtual environments
+venv/
+.venv/
+env/
+ENV/
+
+# Environment
+.env
+.env.*
+!.env.example
+
+# Databases and local data
+*.db
+*.sqlite3
+*.sqlite
+
+# Flask
+instance/
+.webassets-cache
+
+# Test / coverage
+.pytest_cache/
+.coverage
+htmlcov/
+
+# Build artifacts
+build/
+dist/
+*.egg-info/
+
+# IDE / OS
+.DS_Store
+Thumbs.db
+.vscode/
+
+# Model and vector artifacts
+*.pt
+*.index
+*.faiss
+
+# Runtime uploads/results
+backend/static/uploads/*
+backend/static/results/*
+!backend/static/uploads/.gitkeep
+!backend/static/results/.gitkeep
+
